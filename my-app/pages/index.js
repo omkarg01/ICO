@@ -198,4 +198,29 @@ export default function Home() {
         }
     }
 
+    /**
+   * getTotalTokensMinted: Retrieves how many tokens have been minted till now
+   * out of the total supply
+   */
+    const getTotalTokensMinted = async () => {
+        try {
+            // Get the provider from web3Modal, which in our case is MetaMask
+            // No need for the Signer here, as we are only reading state from the blockchain
+            const provider = await getProviderOrSigner();
+
+            // Create an instance of token contract
+            const tokenContract = new Contract(
+                TOKEN_CONTRACT_ADDRESS,
+                TOKEN_CONTRACT_ABI,
+                provider
+            );
+
+            // Get all the tokens that have been minted
+            const _tokensMinted = await tokenContract.totalSupply();
+            setTokensMinted(_tokensMinted);
+        } catch (error) {
+            console.error(err);
+        }
+    }
+
 }
