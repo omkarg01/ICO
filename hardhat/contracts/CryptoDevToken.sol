@@ -77,4 +77,25 @@ contract CryptoDevToken is ERC20, Ownable {
         // Mint (amount * 10) tokens for each NFT
         _mint(msg.sender, amount * tokensPerNFT);
     }
+
+    /**
+     * @dev withdraws all ETH sent to this contract
+     * Requirements:
+     * wallet connected must be owner's address
+     */
+    function withdraw() public onlyOwner {
+        uint256 amount = address(this).balance;
+        require(amount > 0, "Nothing to withdraw, contract balance empty");
+
+        address _owner = owner();
+        (bool sent, ) = _owner.call{value: amount}("");
+        require(sent, "Failed to send Ether");
+    }
+
+    // Function to receive Ether. msg.data must be empty
+    receive() external payable {}
+
+    // Fallback function is called when msg.data is not empty
+    fallback() external payable {}
+
 }
