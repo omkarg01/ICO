@@ -223,4 +223,29 @@ export default function Home() {
         }
     }
 
+    /**
+     * getOwner: gets the contract owner by connected address
+     */
+    const getOwner = async () => {
+        try {
+            const provider = await getProviderOrSigner();
+            const tokenContract = new Contract(
+                TOKEN_CONTRACT_ADDRESS,
+                TOKEN_CONTRACT_ABI,
+                provider
+            );
+            // call the owner function from the contract
+            const _owner = await tokenContract.owner();
+            // we get signer to extract address of currently connected Metamask account
+            const signer = await getProviderOrSigner(true);
+            // Get the address associated to signer which is connected to Metamask
+            const address = await signer.getAddress();
+            if (address.toLowerCase() === _owner.toLowerCase()) {
+                setIsOwner(true);
+            }
+        } catch (error) {
+            console.error(err.message);
+        }
+    }
+
 }
