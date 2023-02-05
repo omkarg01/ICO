@@ -339,4 +339,56 @@ export default function Home() {
             getOwner();
         }
     }, [walletConnected]);
+
+    /*
+       renderButton: Returns a button based on the state of the dapp
+     */
+    const renderButton = () => {
+        // If we are currently waiting for something, return a loading button
+        if (loading) {
+            return (
+                <div>
+                    <button className={styles.button}>Loading...</button>
+                </div>
+            );
+        }
+
+        // If tokens to be claimed are greater than 0, Return a claim button
+        if (tokensToBeClaimed > 0) {
+            return (
+                <div>
+                    <div className={styles.description}>
+                        {tokensToBeClaimed * 10} Tokens can be claimed!
+                    </div>
+                    <button className={styles.button} onClick={claimCryptoDevTokens}>
+                        Claim Tokens
+                    </button>
+                </div>
+            );
+        }
+
+        // If user doesn't have any tokens to claim, show the mint button
+        return (
+            <div style={{ display: "flex-col" }}>
+                <div>
+                    <input
+                        type="number"
+                        placeholder="Amount of Tokens"
+                        // BigNumber.from converts the `e.target.value` to a BigNumber
+                        onChange={(e) => setTokenAmount(BigNumber.from(e.target.value))}
+                        className={styles.input}
+                    />
+                </div>
+
+                <button
+                    className={styles.button}
+                    disabled={!(tokenAmount > 0)}
+                    onClick={() => mintCryptoDevToken(tokenAmount)}
+                >
+                    Mint Tokens
+                </button>
+            </div>
+        );
+    }
+
 }
