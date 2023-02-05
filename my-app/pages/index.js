@@ -84,7 +84,7 @@ export default function Home() {
             }
 
         } catch (error) {
-            console.error(err);
+            console.error(error);
             setTokensToBeClaimed(zero);
         }
     }
@@ -118,7 +118,7 @@ export default function Home() {
             setBalanceOfCryptoDevTokens(balance);
 
         } catch (error) {
-            console.error(err);
+            console.error(error);
             setBalanceOfCryptoDevTokens(zero);
         }
     }
@@ -161,7 +161,7 @@ export default function Home() {
             await getTokensToBeClaimed();
 
         } catch (error) {
-            console.error(err);
+            console.error(error);
         }
     }
 
@@ -194,7 +194,7 @@ export default function Home() {
             await getTokensToBeClaimed();
 
         } catch (error) {
-            console.error(err);
+            console.error(error);
         }
     }
 
@@ -219,7 +219,7 @@ export default function Home() {
             const _tokensMinted = await tokenContract.totalSupply();
             setTokensMinted(_tokensMinted);
         } catch (error) {
-            console.error(err);
+            console.error(error);
         }
     }
 
@@ -244,7 +244,7 @@ export default function Home() {
                 setIsOwner(true);
             }
         } catch (error) {
-            console.error(err.message);
+            console.error(error.message);
         }
     }
 
@@ -268,8 +268,8 @@ export default function Home() {
             await getOwner();
 
         } catch (error) {
-            console.error(err);
-            window.alert(err.reason);
+            console.error(error);
+            window.alert(error.reason);
         }
     }
 
