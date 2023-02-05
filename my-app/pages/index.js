@@ -123,5 +123,46 @@ export default function Home() {
         }
     }
 
+    /**
+     * mintCryptoDevToken: mints `amount` number of tokens to a given address
+     */
+    const mintCryptoDevToken = async (amount) => {
+        try {
+            // We need a Signer here since this is a 'write' transaction.
+            // Create an instance of tokenContract
+            const signer = await getProviderOrSigner(true);
+
+            // Create an instance of tokenContract
+            const tokenContract = new Contract(
+                TOKEN_CONTRACT_ADDRESS,
+                TOKEN_CONTRACT_ABI,
+                signer
+            );
+
+            // Each token is of `0.001 ether`. The value we need to send is `0.001 * amount`
+            const value = 0.001 * amount;
+
+            const tx = await tokenContract.mint(amount, {
+                // value signifies the cost of one crypto dev token which is "0.001" eth.
+                // We are parsing `0.001` string to ether using the utils library from ethers.js
+                value: utils.parseEther(value.toString()),
+            });
+
+            setLoading(true);
+
+            // wait for the transaction to get mined
+            await tx.wait();
+
+            setLoading(false);
+            window.alert("Successfully minted Crypto Dev Tokens");
+
+            await getBalanceOfCryptoDevTokens();
+            await getTotalTokensMinted();
+            await getTokensToBeClaimed();
+
+        } catch (error) {
+            console.error(err);
+        }
+    }
 
 }
