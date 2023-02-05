@@ -89,5 +89,39 @@ export default function Home() {
         }
     }
 
+    /**
+     * getBalanceOfCryptoDevTokens: checks the balance of Crypto Dev Tokens's held by an address
+     */
+    const getBalanceOfCryptoDevTokens = async () => {
+        try {
+            // Get the provider from web3Modal, which in our case is MetaMask
+            // No need for the Signer here, as we are only reading state from the blockchain
+            const provider = await getProviderOrSigner();
+
+            // Create an instance of token contract
+            const tokenContract = new Contract(
+                TOKEN_CONTRACT_ADDRESS,
+                TOKEN_CONTRACT_ABI,
+                provider
+            );
+
+            // We will get the signer now to extract the address of the currently connected MetaMask account
+            const signer = await getProviderOrSigner(true);
+
+            // Get the address associated to the signer which is connected to  MetaMask
+            const address = await signer.getAddress();
+
+            // call the balanceOf from the token contract to get the number of tokens held by the user
+            const balance = await tokenContract.balanceOf(address);
+
+            // balance is already a big number, so we dont need to convert it before setting it
+            setBalanceOfCryptoDevTokens(balance);
+
+        } catch (error) {
+            console.error(err);
+            setBalanceOfCryptoDevTokens(zero);
+        }
+    }
+
 
 }
