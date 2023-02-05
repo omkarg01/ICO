@@ -165,4 +165,37 @@ export default function Home() {
         }
     }
 
+    /**
+     * claimCryptoDevTokens: Helps the user claim Crypto Dev Tokens
+     */
+    const claimCryptoDevTokens = async () => {
+        try {
+            // We need a Signer here since this is a 'write' transaction.
+            // Create an instance of tokenContract
+            const signer = await getProviderOrSigner(true);
+
+            // Create an instance of tokenContract
+            const tokenContract = new Contract(
+                TOKEN_CONTRACT_ADDRESS,
+                TOKEN_CONTRACT_ABI,
+                signer
+            );
+
+            const tx = await tokenContract.claim();
+            setLoading(true);
+            // wait for the transaction to get mined
+            await tx.wait();
+            setLoading(false);
+
+            window.alert("Sucessfully claimed Crypto Dev Tokens");
+
+            await getBalanceOfCryptoDevTokens();
+            await getTotalTokensMinted();
+            await getTokensToBeClaimed();
+
+        } catch (error) {
+            console.error(err);
+        }
+    }
+
 }
