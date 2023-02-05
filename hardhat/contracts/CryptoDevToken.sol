@@ -54,11 +54,27 @@ contract CryptoDevToken is ERC20, Ownable {
     function claim() public {
         address sender = msg.sender;
         // Get the number of CryptoDev NFT's held by a given sender address
+        uint256 balance = CryptoDevsNFT.balanceOf(sender);
 
-        
+        // If the balance is zero, revert the transaction
+        require(balance > 0, "You don't own any Crypto Dev NFT");
+        // amount keeps track of number of unclaimed tokenIds
+        uint256 amount = 0;
 
+        // loop over the balance and get the token ID owned by `sender` at a given `index` of its token list.
+        for (uint256 i = 0; i < balance; i++) {
+            uint256 tokenId = CryptoDevsNFT.tokenOfOwnerByIndex(sender, i);
+            // if the tokenId has not been claimed, increase the amount
+            if (!tokenIdsClaimed[tokenId]) {
+                amount += 1;
+                tokenIdsClaimed[tokenId] = true;
+            }
+        }
+
+        // If all the token Ids have been claimed, revert the transaction;
+        require(amount > 0, "You have already claimed all the tokens");
+        // call the internal function from Openzeppelin's ERC20 contract
+        // Mint (amount * 10) tokens for each NFT
+        _mint(msg.sender, amount * tokensPerNFT);
     }
-
-
-
 }
